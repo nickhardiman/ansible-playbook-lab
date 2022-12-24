@@ -1,0 +1,117 @@
+---
+
+# prometheus and grafana
+# https://github.com/cloudalchemy/ansible-prometheus
+# https://galaxy.ansible.com/cloudalchemy/grafana
+# https://github.com/cloudalchemy/ansible-grafana
+# https://github.com/redhat-cop/tower_grafana_dashboards/blob/master/metric_tower.json
+#
+# prereqs
+# dnf install python3-jmespath
+# ansible-galaxy role install cloudalchemy.prometheus
+# ansible-galaxy role install cloudalchemy.grafana
+# ansible-galaxy collection install community.grafana
+#
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/managing_networking_infrastructure_services/providing-dhcp-services_networking-infrastructure-services#doc-wrapper
+
+# !!! routing may be an issue. 
+# subnet has no NAT or home lab IP. 
+# all must be run on hypervisor
+# or a machine where routing is set up to find this obscure subnet.
+
+- name: build new server machine
+  hosts: monitor
+  become: yes
+  gather_facts: no
+  serial: 1
+  roles: 
+  - role: nick.platform.libvirt_storage
+    delegate_to: "{{ groups['hypervisor'][0] }}"
+  - role: nick.platform.libvirt_machine
+    delegate_to: "{{ groups['hypervisor'][0] }}"
+  - role: nick.platform.hosts_record
+    vars:
+      ip_address: "{{ nics[0]['ip'] }}"
+    delegate_to: "{{ groups['install_host'][0] }}"
+
+  tasks:
+
+  - name: Wait for new server to be ready
+    ansible.builtin.wait_for_connection:
+      timeout: 30
+    become: no
+
+- name: configure new server machine
+  hosts: monitor
+  become: yes
+  gather_facts: yes
+  serial: 1
+  roles:
+  - nick.platform.managed_node
+  - nick.platform.server_cert
+  - role: nick.platform.local_repo_consumer
+    vars:
+      dnf_config_file: mirror-rhel8.repo
+  - nick.platform.latest_packages
+
+  tasks: 
+
+  - name: install role dependency
+    ansible.builtin.dnf:
+      name: 
+        - python3-jmespath
+        - python3-libselinux
+        - python3-policycoreutils
+      state: latest
+    delegate_to: "{{ groups['install_host'][0] }}"
+
+
+
+- name: install apps
+  hosts: monitor
+  become: yes
+  gather_facts: yes
+  serial: 1
+  environment:
+    http_proxy: http://gateway.lab.example.com:3128
+    HTTPS_PROXY: http://gateway.lab.example.com:3128
+    no_proxy: localhost,127.0.0.1,example.com
+  roles:
+  - role: cloudalchemy.prometheus
+    vars:
+      prometheus_version: latest
+  - role: cloudalchemy.grafana
+    vars:
+      grafana_security:
+        admin_user: admin
+        admin_password: redhat
+      grafana_datasources:
+        - name: prometheus
+          type: prometheus
+          access: proxy
+          url: 'http://localhost:9090'
+          basicAuth: false
+
+  tasks: 
+
+# firewall
+  # open port 9090 for prometheus
+  # open port 3000 for grafana
+  #
+  - name: permit service traffic
+    ansible.posix.firewalld:
+      service: "{{ item }}"
+      immediate: yes
+      permanent: yes
+      state: enabled
+    loop: 
+    - grafana
+    - prometheus
+
+
+
+# test 
+# prometheus
+# curl http://localhost:9090/
+# curl http://localhost:3000/
+#

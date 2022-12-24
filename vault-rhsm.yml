@@ -1,0 +1,10 @@
+# Enter your Red Hat Subscription Manager account.
+# Sign up for free at https://developers.redhat.com/
+# Check your account works by logging in at https://access.redhat.com
+# Then encrypt this file. 
+#   echo 'my vault password' >  ~/my-vault-pass
+#   ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-rhsm.yml  
+rhsm_user: my_RHSM_name
+rhsm_password: 'my RHSM password'
+#
+

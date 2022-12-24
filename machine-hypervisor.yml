@@ -1,0 +1,14 @@
+---
+- name: configure host1
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  roles:
+  - nick.platform.libvirt_host
+
+#  tasks:
+#
+#  - name: set hostname
+#    ansible.builtin.hostname:
+#      name: host1.lab.example.com
+

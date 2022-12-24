@@ -1,0 +1,58 @@
+
+# requirements 
+# !!! incomplete
+#   ansible-galaxy role install -r roles/requirements.yml
+#   # get token from https://console.redhat.com/ansible/automation-hub/token#
+#   # set token for downloads from Red Hat's central automation hub
+#   export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=...
+#   ansible-galaxy collection install -r collections/requirements.yml
+
+# Each of these playbooks can be run separately. 
+# For machines that need to register with RHSM, use a vault file.
+#   ansible-playbook --vault-pass-file=~/my-vault-pass  machine-repo.yml
+# For machines that use local repos, there is no need to register.
+#   ansible-playbook  machine-git.yml
+#
+# Build the virtual network.
+- ansible.builtin.import_playbook: network.yml
+
+# Build the virtual hardware, install OS, and install apps.
+# Work around some chicken-and-egg problems. 
+# * No DHCP yet, so the first two machines have static IP addresses.
+# * No DNS yet, so the first three have /etc/hosts records. 
+# * No local RPM repositories yet, so the first four update from RHSM CDN 
+#   (Red Hat Subscription Management Content Delivery Network). 
+#   An account is required for registering with RHSM.
+# Work around some access problems.
+# * No NAT, so the first four machines need to use the gateway proxy.
+# * The install host does not use the new network's DNS. 
+#   Add /etc/hosts records so the install host can find all these machines.
+#
+# Gateway has an interface on the home network and 
+# another interface on the new network.
+# It runs squid to proxy web requests to the Internet, and 
+# bind to proxy DNS requests to the Internet. 
+#
+- ansible.builtin.import_playbook: machine-gateway.yml
+- ansible.builtin.import_playbook: machine-dhcp.yml
+# DHCP is now available. 
+# Interfaces can now get info from DHCP.
+- ansible.builtin.import_playbook: machine-dns.yml
+# DNS is now available. 
+# No more need for /etc/hosts records.
+# So many RPM packages to mirror! This one takes an hour.
+- ansible.builtin.import_playbook: machine-repo.yml
+# Local RPM repositories are now available. 
+# OS can now install and update packages from local repos.
+# This playbook installs Gitlab from a third-party site.
+# It needs to use the gateway proxy to download Internet resources.
+- ansible.builtin.import_playbook: machine-git.yml
+# This playbook installs Elastic stack, which needs to use the gateway proxy to download Internet resources.
+- ansible.builtin.import_playbook: machine-log.yml
+# This playbook installs prometheus and grafana, which needs to use the gateway proxy to download Internet resources.
+- ansible.builtin.import_playbook: machine-metric.yml
+- ansible.builtin.import_playbook: machine-id.yml
+
+# test the new stack
+- ansible.builtin.import_playbook: test-stack.yml
+

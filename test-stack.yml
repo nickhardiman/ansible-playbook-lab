@@ -1,0 +1,15 @@
+- name: test stack
+  hosts: automationcontroller
+  gather_facts: no
+  tasks:
+
+  - name: check with ping
+    ping:
+
+  - name: check the API
+    uri:
+      url: "https://{{ inventory_hostname }}/api/v2/"
+      #validate_certs: no
+
+
+
