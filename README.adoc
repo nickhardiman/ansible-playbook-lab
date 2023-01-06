@@ -21,34 +21,12 @@ id,           enp1s0,    52:54:00:03:00:10, 192.168.134.10,  lab.example.com
 smtp,         enp1s0,    52:54:00:03:00:11, 192.168.134.11,  lab.example.com
 repo-rhel8,   enp1s0,    52:54:00:03:00:12, 192.168.134.12,  lab.example.com
 repo-rhel9,   enp1s0,    52:54:00:03:00:13, 192.168.134.13,  lab.example.com
+mail,         enp1s0,    52:54:00:03:00:14, 192.168.134.14,  lab.example.com
 
 controller,   enp1s0,    52:54:00:03:00:20, 192.168.134.20,  lab.example.com
 hub,          enp1s0,    52:54:00:03:00:21, 192.168.134.21,  lab.example.com
 ee,           enp1s0,    52:54:00:03:00:22, 192.168.134.22,  lab.example.com
 database,     enp1s0,    52:54:00:00:00:23, 192.168.134.23,  lab.example.com
-
-previous attempts,,,,
-
-name1,         enp1s0,   52:54:00:00:00:12, 192.168.1.12, lab.example.com
-git1,            eth0,   52:54:00:00:00:13, 192.168.1.13, lab.example.com
-repo1,           eth0,   52:54:00:00:00:14, 192.168.1.14, lab.example.com
-builder1,      enp1s0,   52:54:00:00:00:15, 192.168.1.15, lab.example.com
-controller1,     eth0,   52:54:00:00:00:16, 192.168.1.16, lab.example.com
-antora1,         eth0,   52:54:00:00:00:17, 192.168.1.17, lab.example.com
-jenkins1,        eth0,   52:54:00:00:00:18, 192.168.1.18, lab.example.com
-capsule1,        eth0,   52:54:00:00:00:19, 192.168.1.19, lab.example.com
-builder2,      enp1s0,   52:54:00:00:00:20, 192.168.1.20,  lab.example.com
-control2,      enp1s0,   52:54:00:00:00:21, 192.168.1.21,  lab.example.com
-hub2,          enp1s0,   52:54:00:00:00:22, 192.168.1.22,  lab.example.com
-*private0*,   *privbr0*, 52:54:00:01:00:01, 192.168.152.1,  private.example.com
-guest1,       enp2s0,    52:54:00:01:00:02, 192.168.152.2,  private.example.com
-guest2,       eth0,      52:54:00:01:00:03, 192.168.152.3,  private.example.com
-guest4,          eth0,   52:54:00:01:00:04, 192.168.152.4, private.example.com
-capsule1,        eth0,   52:54:00:01:00:05, 192.168.152.4,  private.example.com
-isolatedn1,      eth0,   52:54:00:01:00:06, 192.168.152.5,  private.example.com
-*private1*,   *privbr1*, 52:54:00:02:00:01, 192.168.162.1,  private.example.com
-guest2,       eth1,      52:54:00:02:00:02, 192.168.162.3,  private.example.com
-guest3,       eth1,      52:54:00:02:00:03, 192.168.162.2,  private.example.com
 
 |===
 
@@ -56,7 +34,7 @@ get the code
 
 [source,shell]
 ....
-REPOSITORY=vm-aap2-hybrid
+REPOSITORY=lab
 git clone https://github.com/nickhardiman/$REPOSITORY
 cd $REPOSITORY
 ....
@@ -72,24 +50,33 @@ ansible-galaxy collection install -r collections/requirements.yml
 ansible-galaxy role install -r roles/requirements.yml 
 ....
 
-== AAP1
+== Add Red Hat Subscription account to the vault
 
-Create
-
-build the machines
+Sign up for free at https://developers.redhat.com/.
+Check your account works by logging in at https://access.redhat.com/.
+Edit the vault file.
+Enter your Red Hat Subscription Manager account.
+Encrypt the file.
 
 [source,shell]
 ....
-ansible-playbook \
-  --ask-become-pass  \
-  -e 'rhsm_user=RH_user'  \
-  -e 'rhsm_password=RH_password' \
-  -e 'rhsm_pool_id=12345'  \
-  main.yml
+vim vault-rhsm.yml
+echo 'my vault password' >  ~/my-vault-pass
+ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-rhsm.yml  
 ....
 
-Destroy
+== AAP1
 
+Build the network and machines.
+
+[source,shell]
+....
+ansible-playbook main.yml
+....
+
+!!! possibly broken from here on down. 
+
+Destroy everything. 
 This has the power to remove any local libvirt virtual machine, so it's dangerous. 
 
 [source,shell]

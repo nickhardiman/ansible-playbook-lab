@@ -49,7 +49,7 @@
   - role: nick.platform.hosts_record
     # !!! hardcoded
     vars:
-      ip_address: 192.168.135.3
+      ip_address: "{{ net_prefix }}.3"
       fqdn: gateway.lab.example.com
       host: gateway
   - nick.platform.cdn_repo_consumer
