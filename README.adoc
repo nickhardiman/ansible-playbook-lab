@@ -1,4 +1,26 @@
-= playbook for setting up a new VM.
+= playbook for setting up a network of VMs
+
+A playbook to help me build my home lab. 
+
+I'm halfway through turning a PC into a hypervisor that runs a pile-load (that's the technical term) of Virtual Machines. 
+This needs work. 
+I mean, who names a network *test0*?
+
+Each machine has one job to do.
+For instance, *dhcp* is a VM that runs the core Internet service dhcp, *git* runs the developer service GitLab, and *metric* runs the time series database prometheus.
+
+This playbook relies on a bunch (that's another technical term) of collections, including my https://github.com/nickhardiman/ansible-collection-platform[ansible-collection-platform].
+Check out requirements.yml, described below.
+
+
+== VMs 
+
+The https://github.com/nickhardiman/ansible-playbook-lab/blob/main/group_vars/all/main.yml[defaults file] defines a lot of these values. 
+For instance, 
+MAC addresses are set to ** 52:54:00:03:00:* ** and 
+IPv4 addresses are set to ** 192.168.134.* **. 
+The domain *lab.example.com* is set per machine - check out dhcp's 
+https://github.com/nickhardiman/ansible-playbook-lab/blob/main/host_vars/dhcp.lab.example.com/main.yml[host vars file].
 
 
 .guests attached to bridges
@@ -30,7 +52,9 @@ database,     enp1s0,    52:54:00:00:00:23, 192.168.134.23,  lab.example.com
 
 |===
 
-get the code
+== cheat sheet
+
+* get the code
 
 [source,shell]
 ....
@@ -39,8 +63,8 @@ git clone https://github.com/nickhardiman/$REPOSITORY
 cd $REPOSITORY
 ....
 
-Install collections and roles to ~/.ansible/. 
-Some collections are Red Hat Certified, from Ansible Automation Hub.
+* Install collections and roles to ~/.ansible/. 
+* Some collections are Red Hat Certified, from Ansible Automation Hub.
 This requires an offline token. 
 
 [source,shell]
@@ -50,13 +74,14 @@ ansible-galaxy collection install -r collections/requirements.yml
 ansible-galaxy role install -r roles/requirements.yml 
 ....
 
-== Add Red Hat Subscription account to the vault
 
-Sign up for free at https://developers.redhat.com/.
-Check your account works by logging in at https://access.redhat.com/.
-Edit the vault file.
-Enter your Red Hat Subscription Manager account.
-Encrypt the file.
+=== Add Red Hat Subscription account to the vault
+
+* Sign up for free at https://developers.redhat.com/.
+* Check your account works by logging in at https://access.redhat.com/.
+* Edit the vault file.
+* Enter your Red Hat Subscription Manager account.
+* Encrypt the file.
 
 [source,shell]
 ....
@@ -65,7 +90,8 @@ echo 'my vault password' >  ~/my-vault-pass
 ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-rhsm.yml  
 ....
 
-== AAP1
+
+=== run, the AAP1 way
 
 Build the network and machines.
 
@@ -95,7 +121,8 @@ ansible-playbook \
   delete.yml 
 ....
 
-== AAP2
+
+=== run, the AAP2 way
 
 Create
 
