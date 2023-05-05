@@ -54,7 +54,9 @@ database,     enp1s0,    52:54:00:00:00:23, 192.168.134.23,  lab.example.com
 
 == cheat sheet
 
-* get the code
+=== clone this repo 
+
+* Get this code.
 
 [source,shell]
 ....
@@ -63,17 +65,26 @@ git clone https://github.com/nickhardiman/$REPOSITORY
 cd $REPOSITORY
 ....
 
-* Install collections and roles to ~/.ansible/. 
-* Some collections are Red Hat Certified, from Ansible Automation Hub.
+=== install collections and roles to ~/.ansible/
+
+Some collections are Red Hat Certified, from Ansible Automation Hub.
 This requires an offline token. 
+
+* Get a token from https://console.redhat.com/ansible/automation-hub/token#
+* Set an environment variable.
 
 [source,shell]
 ....
 export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=eyJhbGciOi...
 ansible-galaxy collection install -r collections/requirements.yml 
-ansible-galaxy role install -r roles/requirements.yml 
 ....
 
+* Install collections. 
+
+[source,shell]
+....
+ansible-galaxy role install -r roles/requirements.yml 
+....
 
 === Add Red Hat Subscription account to the vault
 
