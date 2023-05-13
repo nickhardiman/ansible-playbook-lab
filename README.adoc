@@ -1,10 +1,12 @@
-= playbook for setting up a network of VMs
+= Ansible playbook for setting up a network of VMs
 
-A playbook to help me build my home lab. 
-
+Ansible helps me build my home lab. 
 I'm halfway through turning a PC into a hypervisor that runs a pile-load (that's the technical term) of Virtual Machines. 
 This needs work. 
 I mean, who names a network *test0*?
+
+If you can read Ansible's YAML, start with   
+https://github.com/nickhardiman/ansible-playbook-lab/blob/main/main.yml[main.yml]. 
 
 Each machine has one job to do.
 For instance, *dhcp* is a VM that runs the core Internet service dhcp, *git* runs the developer service GitLab, and *metric* runs the time series database prometheus.
@@ -56,11 +58,18 @@ database,     enp1s0,    52:54:00:00:00:23, 192.168.134.23,  lab.example.com
 
 === clone this repo 
 
+This works with RHEL and Fedora. 
+Some things, like that "dnf install" line, won't work on other OSs.
+
+* Install packages.
 * Get this code.
 
 [source,shell]
 ....
-REPOSITORY=lab
+# install packages
+dnf install git ansible
+# get code
+REPOSITORY=ansible-playbook-lab
 git clone https://github.com/nickhardiman/$REPOSITORY
 cd $REPOSITORY
 ....
@@ -79,7 +88,7 @@ export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=eyJhbGciOi...
 ansible-galaxy collection install -r collections/requirements.yml 
 ....
 
-* Install collections. 
+* Install roles. 
 
 [source,shell]
 ....
