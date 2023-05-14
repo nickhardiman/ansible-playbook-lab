@@ -34,10 +34,10 @@ machine-gateway.yml
 [%header,format=csv]
 |===
 name,         interface, MAC,               IP,              domain
-*home*,    *public0*,    52:54:00:01:00:01, 192.168.1.1,     home
+*public0*,    *brpublic0*,    52:54:00:01:00:01, 192.168.1.1,     home
 gateway,      enp1s0,    52:54:00:00:00:03, 192.168.1.3,     home
 
-*net-test0*,  *test0*,   52:54:00:03:00:01, 192.168.134.1,   lab.example.com
+*lab0*,  *brlab0*,   52:54:00:03:00:01, 192.168.134.1,   lab.example.com
  ,           ,           52:54:00:03:00:02, 192.168.134.2,   lab.example.com
 gateway,      enp2s0,    52:54:00:03:00:03, 192.168.134.3,   lab.example.com
 dhcp,         enp1s0,    52:54:00:03:00:04, 192.168.134.4,   lab.example.com
@@ -52,14 +52,88 @@ repo-rhel8,   enp1s0,    52:54:00:03:00:12, 192.168.134.12,  lab.example.com
 repo-rhel9,   enp1s0,    52:54:00:03:00:13, 192.168.134.13,  lab.example.com
 mail,         enp1s0,    52:54:00:03:00:14, 192.168.134.14,  lab.example.com
 
-controller,   enp1s0,    52:54:00:03:00:20, 192.168.134.20,  lab.example.com
-hub,          enp1s0,    52:54:00:03:00:21, 192.168.134.21,  lab.example.com
-ee,           enp1s0,    52:54:00:03:00:22, 192.168.134.22,  lab.example.com
-database,     enp1s0,    52:54:00:00:00:23, 192.168.134.23,  lab.example.com
-
 |===
 
 == cheat sheet
+
+This playbook assumes you already have ansible set up.
+The playbook uses _ansible_user_ to connect to all the machines, 
+along with a key pair named _ansible-key.priv_ and _ansible-key.pub_. 
+
+If you want to do the same kind of thing but 
+haven't set it up yet, 
+create ansible_user on your host machine. 
+
+=== create ansible_user 
+
+Use the root account.
+
+Create a key pair for ansible_user. 
+I called this ansible-key.priv and ansible-key.pub. 
+
+[source,shell]
+....
+# create a new keypair 
+ssh-keygen -f ./ansible-key -q -N ""
+mv ansible-key  ansible-key.priv
+....
+
+Create the ansible_user account. 
+
+[source,shell]
+....
+# create the user
+useradd ansible_user
+....
+
+Copy the keys to ansible_user's SSH config directory. 
+
+[source,shell]
+....
+# copy keys
+mkdir /home/ansible_user/.ssh
+chmod 0700 /home/ansible_user/.ssh
+cp ansible-key.priv  /home/ansible_user/.ssh/id_rsa
+chmod 0600 /home/ansible_user/.ssh/id_rsa
+cp ansible-key.pub  /home/ansible_user/.ssh/id_rsa.pub
+# SSH to localhost with key-based login
+cat ansible-key.pub >> /home/ansible_user/.ssh/authorized_keys
+chmod 0600 /home/ansible_user/.ssh/authorized_keys
+chown -R ansible_user:ansible_user /home/ansible_user/.ssh
+# allow passwordless sudo
+echo 'ansible_user      ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/ansible_user 
+....
+
+Allow passwordless sudo.
+
+[source,shell]
+....
+echo 'ansible_user      ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/ansible_user 
+....
+
+Copy the keys to your SSH config directory. 
+
+[source,shell]
+....
+# copy keys
+cp ansible-key.priv  /home/nick/.ssh/
+cp ansible-key.pub  /home/nick/.ssh/
+....
+
+Add the location to ansible.cfg. 
+
+[source,shell]
+....
+private_key_file = /home/nick/.ssh/ansible-key.priv
+....
+
+Check your work. 
+
+[source,shell]
+....
+ssh -i /home/nick/.ssh/ansible-key.priv ansible_user@localhost
+....
+
 
 === clone this repo 
 
@@ -81,7 +155,7 @@ cd $REPOSITORY
 
 === install collections and roles to ~/.ansible/
 
-Some collections are Red Hat Certified, from Ansible Automation Hub.
+Some collections, like ansible.posix, are Red Hat Certified, from Ansible Automation Hub.
 This requires an offline token. 
 
 * Get a token from https://console.redhat.com/ansible/automation-hub/token#

@@ -16,6 +16,17 @@
 # Build the virtual network.
 - ansible.builtin.import_playbook: network.yml
 
+
+# !!!
+- name: build new server machine
+  hosts: hypervisor
+  gather_facts: no
+  tasks:
+  - ansible.builtin.fail: 
+
+
+
+
 # Build the virtual hardware, install OS, and install apps.
 # Work around some chicken-and-egg problems. 
 # * No DHCP yet, so the first two machines have static IP addresses.
