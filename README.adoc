@@ -17,6 +17,9 @@ Check out requirements.yml, described below.
 
 == VMs 
 
+image::core-network.drawio.png[title="guests"] 
+
+
 The https://github.com/nickhardiman/ansible-playbook-lab/blob/main/group_vars/all/main.yml[defaults file] defines a lot of these values. 
 For instance, 
 MAC addresses are set to ** 52:54:00:03:00:* ** and 
@@ -24,6 +27,8 @@ IPv4 addresses are set to ** 192.168.134.* **.
 The domain *lab.example.com* is set per machine - check out dhcp's 
 https://github.com/nickhardiman/ansible-playbook-lab/blob/main/host_vars/dhcp.lab.example.com/main.yml[host vars file].
 
+Each of these hosts has a corresponding tasks file eg. 
+machine-gateway.yml
 
 .guests attached to bridges
 [%header,format=csv]
