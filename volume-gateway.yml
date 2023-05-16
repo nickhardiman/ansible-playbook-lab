@@ -11,8 +11,8 @@
   serial: 1
   roles: 
   - role: nick.platform.libvirt_storage
-    vars:
-      kickstart_template: gateway.ks.j2
+#    vars:
+#      kickstart_template: {{ fqdn }}.ks.j2
     delegate_to: "{{ groups['hypervisor'][0] }}"
   - role: nick.platform.libvirt_machine
     delegate_to: "{{ groups['hypervisor'][0] }}"

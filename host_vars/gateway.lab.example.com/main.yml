@@ -13,21 +13,25 @@
 # network
 # MAC addresses are listed here.
 #   https://hardiman.consulting/rhel/9/unsorted/host1-libvirt-network.html
+public_net_short_name: public
+public_libvirt_name:   "net{{ public_net_short_name }}0"
 public_mac_prefix: "52:54:00:00"
+lab_net_short_name: lab
+lab_libvirt_name:   "net{{ lab_net_short_name }}0"
 lab_net_prefix: "192.168.134"
 lab_mac_prefix: "52:54:00:02"
 nics:
 - 
   name: enp1s0
   mac: "{{ public_mac_prefix }}:00:03"
-  net: public0
+  net: "{{ public_libvirt_name }}"
   # !!! get rid of this?
   # IP from DHCP
   ip: 192.168.1.3
 - 
   name: enp2s0
   mac: "{{ lab_mac_prefix }}:00:03"
-  net: net-lab
+  net: "{{ lab_libvirt_name }}"
   # !!! get rid of this?
   # IP from DHCP
   ip: "{{ lab_net_prefix }}.3"
@@ -48,6 +52,7 @@ RPMs:
 - bind
 
 # kickstart
+kickstart_template: {{ fqdn }}.ks.j2
 
 # accounts
 
