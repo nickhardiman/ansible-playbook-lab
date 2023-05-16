@@ -39,7 +39,6 @@
   serial: 1
   vars_files:
   - vault-rhsm.yml
-  serial: 1
   environment:
     http_proxy: http://gateway.lab.example.com:3128
     HTTPS_PROXY: http://gateway.lab.example.com:3128
@@ -49,7 +48,7 @@
   - role: nick.platform.hosts_record
     # !!! hardcoded
     vars:
-      ip_address: "{{ net_prefix }}.3"
+      ip_address: "{{ lab_net_prefix }}.3"
       fqdn: gateway.lab.example.com
       host: gateway
   - nick.platform.cdn_repo_consumer

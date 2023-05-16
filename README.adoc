@@ -66,6 +66,8 @@ create ansible_user on your host machine.
 
 === create ansible_user 
 
+!!! didn't I translate this to a role? 
+
 Use the root account.
 
 Create a key pair for ansible_user. 
@@ -239,3 +241,13 @@ ansible-navigator run main.yml \
   --extra-var='rhsm_pool_id=12345'  
 ....
 
+
+
+== License
+
+MIT
+
+
+== Author Information
+
+Nick.

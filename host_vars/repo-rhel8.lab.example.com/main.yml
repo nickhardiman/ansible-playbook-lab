@@ -32,11 +32,11 @@ lv_var: 71680
 nics:
 - 
   name: enp1s0
-  mac: "{{ mac_prefix }}:00:12"
+  mac: "{{ lab_mac_prefix }}:00:12"
   net: net-lab
   # !!! get rid of this?
   # IP from DHCP
-  ip: "{{ net_prefix }}.12"
+  ip: "{{ lab_net_prefix }}.12"
 
 # OS
 # default rhel9

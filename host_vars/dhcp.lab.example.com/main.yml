@@ -29,11 +29,11 @@ lv_var: 4096
 nics:
 - 
   name: enp1s0
-  mac: "{{ mac_prefix }}:00:04"
+  mac: "{{ lab_mac_prefix }}:00:04"
   net: net-lab
   # I'm giving this one a static IP. 
   # see kickstart. 
-  ip: "{{ net_prefix }}.4"
+  ip: "{{ lab_net_prefix }}.4"
 
 net_services:
   - ssh

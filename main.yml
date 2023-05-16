@@ -12,20 +12,12 @@
 #   ansible-playbook --vault-pass-file=~/my-vault-pass  machine-repo.yml
 # For machines that use local repos, there is no need to register.
 #   ansible-playbook  machine-git.yml
-#
+
 # Build the virtual network.
-- ansible.builtin.import_playbook: network.yml
 
 
 # !!!
-- name: build new server machine
-  hosts: hypervisor
-  gather_facts: no
-  tasks:
-  - ansible.builtin.fail: 
-
-
-
+#- ansible.builtin.import_playbook: network.yml
 
 # Build the virtual hardware, install OS, and install apps.
 # Work around some chicken-and-egg problems. 
@@ -44,7 +36,22 @@
 # It runs squid to proxy web requests to the Internet, and 
 # bind to proxy DNS requests to the Internet. 
 #
-- ansible.builtin.import_playbook: machine-gateway.yml
+
+- ansible.builtin.import_playbook: volume-gateway.yml
+#- ansible.builtin.import_playbook: machine-gateway.yml
+
+
+
+# !!!
+- name: build new server machine
+  hosts: hypervisor
+  gather_facts: no
+  tasks:
+  - ansible.builtin.fail: 
+
+
+
+
 - ansible.builtin.import_playbook: machine-dhcp.yml
 # DHCP is now available. 
 # Interfaces can now get info from DHCP.

@@ -21,11 +21,11 @@ os_variant: rhel8.5
 nics:
 - 
   name: enp1s0
-  mac: "{{ mac_prefix }}:00:07"
+  mac: "{{ lab_mac_prefix }}:00:07"
   net: net-lab
   # !!! get rid of this?
   # IP from DHCP
-  ip: "{{ net_prefix }}.7"
+  ip: "{{ lab_net_prefix }}.7"
 
 net_services:
   - ssh
@@ -58,8 +58,8 @@ gitlab_extra_settings:
         type: "plain"
         value: |
           {
-          "http_proxy" => "https://{{ net_prefix }}.3:3128",
-          "https_proxy" => "https://{{ net_prefix }}.3:3128",
+          "http_proxy" => "https://{{ lab_net_prefix }}.3:3128",
+          "https_proxy" => "https://{{ lab_net_prefix }}.3:3128",
           "no_proxy" => "localhost, 127.0.0.1, example.com"
           }
 

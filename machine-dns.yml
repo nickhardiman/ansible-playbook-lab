@@ -30,7 +30,6 @@
   serial: 1
   vars_files:
   - vault-rhsm.yml
-  serial: 1
   environment:
     http_proxy: http://gateway.lab.example.com:3128
     HTTPS_PROXY: http://gateway.lab.example.com:3128
