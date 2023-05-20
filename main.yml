@@ -23,15 +23,11 @@
 # * The install host does not use the new network's DNS. 
 #   Add /etc/hosts records so the install host can find all these machines.
 #
-# Gateway has an interface on the home network and 
-# another interface on the new network.
+# Gateway has a unique architecture. 
+# It is the only host with an interface on the public network and 
+# a second interface on the lab network.
 # It runs squid to proxy web requests to the Internet, and 
 # bind to proxy DNS requests to the Internet. 
-#
-
-
-# !!!
-#- ansible.builtin.import_playbook: image-gateway.yml
 - ansible.builtin.import_playbook: machine-gateway.yml
 
 

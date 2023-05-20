@@ -10,9 +10,8 @@
   gather_facts: no
   serial: 1
   roles: 
-  - role: nick.platform.libvirt_storage
-    vars:
-      kickstart_template: gateway.ks.j2
+  - name: build new server storage volume
+    role: nick.platform.libvirt_volume
     delegate_to: "{{ groups['hypervisor'][0] }}"
   - role: nick.platform.libvirt_machine
     delegate_to: "{{ groups['hypervisor'][0] }}"
