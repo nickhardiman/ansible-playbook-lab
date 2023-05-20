@@ -52,7 +52,7 @@ RPMs:
 - bind
 
 # kickstart
-kickstart_template: {{ fqdn }}.ks.j2
+kickstart_template: "{{ fqdn }}.ks.j2"
 
 # accounts
 

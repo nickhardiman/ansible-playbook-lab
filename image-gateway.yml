@@ -10,13 +10,5 @@
   gather_facts: no
   serial: 1
   roles: 
-  - role: nick.platform.libvirt_storage
-#    vars:
-#      kickstart_template: {{ fqdn }}.ks.j2
+  - role: nick.platform.libvirt_volume
     delegate_to: "{{ groups['hypervisor'][0] }}"
-  - role: nick.platform.libvirt_machine
-    delegate_to: "{{ groups['hypervisor'][0] }}"
-  - role: nick.platform.hosts_record
-    vars:
-      ip_address: "{{ nics[0]['ip'] }}"
-    delegate_to: "{{ groups['install_host'][0] }}"

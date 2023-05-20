@@ -1,4 +1,6 @@
 
+# Build the virtual network, storage and machines. 
+#
 # requirements 
 # !!! incomplete
 #   ansible-galaxy role install -r roles/requirements.yml
@@ -6,15 +8,18 @@
 #   # set token for downloads from Red Hat's central automation hub
 #   export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=...
 #   ansible-galaxy collection install -r collections/requirements.yml
-
+#
 # Each of these playbooks can be run separately. 
 # For machines that need to register with RHSM, use a vault file.
 #   ansible-playbook --vault-pass-file=~/my-vault-pass  machine-repo.yml
 # For machines that use local repos, there is no need to register.
 #   ansible-playbook  machine-git.yml
-
-# Build the virtual network.
-
+#
+# inventory
+# Set up these hosts in the inventory. 
+#   install_host - where the playbook runs. Might be your workstation, or might be the hypervisor host. 
+#   hypervisor - the physical machine that hosts the virtual machines. 
+#   
 
 # !!!
 #- ansible.builtin.import_playbook: network.yml
@@ -37,13 +42,13 @@
 # bind to proxy DNS requests to the Internet. 
 #
 
-- ansible.builtin.import_playbook: volume-gateway.yml
+- ansible.builtin.import_playbook: image-gateway.yml
 #- ansible.builtin.import_playbook: machine-gateway.yml
 
 
 
 # !!!
-- name: build new server machine
+- name: '!!! dev exit'
   hosts: hypervisor
   gather_facts: no
   tasks:
