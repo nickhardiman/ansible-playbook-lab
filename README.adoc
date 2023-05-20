@@ -14,6 +14,19 @@ For instance, *dhcp* is a VM that runs the core Internet service dhcp, *git* run
 This playbook relies on a bunch (that's another technical term) of collections, including my https://github.com/nickhardiman/ansible-collection-platform[ansible-collection-platform].
 Check out requirements.yml, described below.
 
+==  requirements 
+
+Various roles and collections. 
+See the cheatsheet below. 
+
+
+== the KVM/QEMU hypervisor 
+
+
+A bootstrap shell script kicks off the install. 
+See instructions in 
+https://github.com/nickhardiman/ansible-playbook-lab/blob/main/machine-hypervisor.sh[machine-hypervisor.sh]
+
 
 == VMs 
 
@@ -56,15 +69,25 @@ mail,         enp1s0,    52:54:00:03:00:14, 192.168.134.14,  lab.example.com
 
 == cheat sheet
 
-This playbook assumes you already have ansible set up.
+
+=== install the KVM/QEMU hypervisor 
+
+A bootstrap shell script kicks off the install. 
+It sets up git, the hypervisor, Ansible user, image storage and virtual network.
+See instructions in 
+https://github.com/nickhardiman/ansible-playbook-lab/blob/main/machine-hypervisor.sh[machine-hypervisor.sh]
+Read the comments and commands before you run it. 
+
+The "create ansible_user" part is copied here. 
+
+=== create ansible_user 
+
 The playbook uses _ansible_user_ to connect to all the machines, 
 along with a key pair named _ansible-key.priv_ and _ansible-key.pub_. 
 
 If you want to do the same kind of thing but 
 haven't set it up yet, 
 create ansible_user on your host machine. 
-
-=== create ansible_user 
 
 !!! didn't I translate this to a role? 
 
@@ -133,7 +156,7 @@ Check your work.
 
 [source,shell]
 ....
-ssh -i /home/nick/.ssh/ansible-key.priv ansible_user@localhost
+ssh -i /home/nick/.ssh/ansible-key.priv ansible_user@localhost  id
 ....
 
 
@@ -154,6 +177,7 @@ REPOSITORY=ansible-playbook-lab
 git clone https://github.com/nickhardiman/$REPOSITORY
 cd $REPOSITORY
 ....
+
 
 === install collections and roles to ~/.ansible/
 
@@ -190,6 +214,14 @@ vim vault-rhsm.yml
 echo 'my vault password' >  ~/my-vault-pass
 ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-rhsm.yml  
 ....
+
+
+=== edit inventory
+
+Set up these hosts in the inventory. 
+
+*  install_host - where the playbook runs. Might be your workstation, or might be the hypervisor host, or might be another machine in your lab.  
+*  hypervisor - the physical machine that hosts the virtual machines. 
 
 
 === run, the AAP1 way

@@ -1,13 +1,10 @@
-
-# Build the virtual network, storage and machines. 
+# Build the virtual machine hardware, install OS, and install apps.
 #
-# requirements 
-# !!! incomplete
-#   ansible-galaxy role install -r roles/requirements.yml
-#   # get token from https://console.redhat.com/ansible/automation-hub/token#
-#   # set token for downloads from Red Hat's central automation hub
-#   export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=...
-#   ansible-galaxy collection install -r collections/requirements.yml
+#
+# prerequisites 
+# git, the hypervisor, Ansible user, image storage and virtual network.
+# A bootstrap shell script sets these up.
+# See instructions in the README and machine-hypervisor.sh
 #
 # Each of these playbooks can be run separately. 
 # For machines that need to register with RHSM, use a vault file.
@@ -15,16 +12,6 @@
 # For machines that use local repos, there is no need to register.
 #   ansible-playbook  machine-git.yml
 #
-# inventory
-# Set up these hosts in the inventory. 
-#   install_host - where the playbook runs. Might be your workstation, or might be the hypervisor host. 
-#   hypervisor - the physical machine that hosts the virtual machines. 
-#   
-
-# !!!
-#- ansible.builtin.import_playbook: network.yml
-
-# Build the virtual hardware, install OS, and install apps.
 # Work around some chicken-and-egg problems. 
 # * No DHCP yet, so the first two machines have static IP addresses.
 # * No DNS yet, so the first three have /etc/hosts records. 
@@ -42,8 +29,10 @@
 # bind to proxy DNS requests to the Internet. 
 #
 
-- ansible.builtin.import_playbook: image-gateway.yml
-#- ansible.builtin.import_playbook: machine-gateway.yml
+
+# !!!
+#- ansible.builtin.import_playbook: image-gateway.yml
+- ansible.builtin.import_playbook: machine-gateway.yml
 
 
 

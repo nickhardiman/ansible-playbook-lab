@@ -1,8 +1,0 @@
-
-- name: build new server machine
-  hosts: hypervisor
-  become: yes
-  gather_facts: yes
-  roles: 
-  - role: nick.platform.libvirt_net
-

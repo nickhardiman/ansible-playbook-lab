@@ -1,14 +1,10 @@
 ---
-- name: configure host1
-  hosts: localhost
-  gather_facts: no
+- name: build new hypervisor
+  hosts: hypervisor
   become: yes
-  roles:
-  - nick.platform.libvirt_host
-
-#  tasks:
-#
-#  - name: set hostname
-#    ansible.builtin.hostname:
-#      name: host1.lab.example.com
+  gather_facts: yes
+  roles: 
+  - role: nick.platform.libvirt_host
+  - role: nick.platform.libvirt_storage
+  - role: nick.platform.libvirt_net
 
