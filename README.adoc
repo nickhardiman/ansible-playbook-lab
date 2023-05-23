@@ -233,6 +233,36 @@ Build the network and machines.
 ansible-playbook main.yml
 ....
 
+Or override your RHSM values. 
+
+[source,shell]
+....
+sudo ansible-playbook main.yml \
+    --extra-var="rhsm_user=my_user"  \
+    --extra-var='rhsm_password=my_password'  \
+    --extra-var="rhsm_pool_id=my_pool_id"
+....
+
+Or build just one machine and change a few details. 
+
+[source,shell]
+....
+sudo ansible-playbook machine-dhcp.yml \
+    --extra-var="host=another-name"  \
+	  --extra-var="disk_size=40"   \
+	  --extra-var="if1_mac=52:54:00:12:34:56"
+....
+
+Or install RHEL 8, not 9.
+
+[source,shell]
+....
+sudo ansible-playbook machine-id.yml  \
+    --extra-var="os_variant=rhel8.5"  \
+    --extra-var="install_iso=/var/lib/libvirt/images/rhel-8.6-x86_64-dvd.iso"
+....
+
+
 !!! possibly broken from here on down. 
 
 Destroy everything. 
@@ -255,6 +285,8 @@ ansible-playbook \
 ....
 
 
+
+
 === run, the AAP2 way
 
 Create
@@ -272,6 +304,25 @@ ansible-navigator run main.yml \
   --extra-var='rhsm_password=RH_password' \
   --extra-var='rhsm_pool_id=12345'  
 ....
+
+
+=== check the console 
+
+Each playbook exits when the build starts.
+A fresh kickstart install takes about 5 minutes, then the VM is powered down. 
+
+Use virsh to check.
+
+[source,shell]
+....
+sudo virsh list -all
+sudo virsh console kvm-guest.lab.example.com
+....
+
+If you want to login to the console, two accounts are configured. 
+
+* user: root, password: Password;1
+* user: nick, password: Password;1
 
 
 

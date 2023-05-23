@@ -13,7 +13,8 @@
   - name: build new server storage volume
     role: nick.platform.libvirt_volume
     delegate_to: "{{ groups['hypervisor'][0] }}"
-  - role: nick.platform.libvirt_machine
+  - name: build new VM
+    role: nick.platform.libvirt_machine
     delegate_to: "{{ groups['hypervisor'][0] }}"
   - role: nick.platform.hosts_record
     vars:
@@ -24,7 +25,7 @@
 
   - name: Wait for new server to be ready
     ansible.builtin.wait_for_connection:
-      timeout: 30
+      timeout: 120
     become: no
 
 
