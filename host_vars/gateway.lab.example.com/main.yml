@@ -42,7 +42,6 @@ net_services:
 - https
 - ssh
 
-
 # OS
 host: gateway
 fqdn: "{{ host }}.lab.example.com"
@@ -55,4 +54,3 @@ RPMs:
 kickstart_template: "{{ fqdn }}.ks.j2"
 
 # accounts
-

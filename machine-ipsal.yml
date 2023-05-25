@@ -1,7 +1,7 @@
 ---
 
 - name: start a new instance of the machine.
-  hosts: gateway
+  hosts: ipsal
   become: yes
   gather_facts: no
   serial: 1
@@ -16,4 +16,3 @@
     ansible.builtin.wait_for_connection:
       timeout: 120
     become: no
-    

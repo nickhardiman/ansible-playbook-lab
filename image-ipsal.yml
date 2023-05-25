@@ -1,15 +1,22 @@
 ---
-# Build a new virtual machine. 
-# Install the OS and configure it. 
-# Add image and config to the library, and throw away the machine.
 
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/managing_networking_infrastructure_services/providing-dhcp-services_networking-infrastructure-services#doc-wrapper
 
-# The "gateway" machine has two interfaces, one on the home network and one on the new libvirt network.
-# There is no DHCP yet so the second interface is assigned an IP address.
-# Use a kickstart file to set up this networking.
-#
+# !!! routing may be an issue. 
+# subnet has no NAT or home lab IP. 
+# all must be run on hypervisor
+# or a machine where routing is set up to find this obscure subnet.
+
+# The "ipsal" machine has one interface on the private libvirt network.
+# It uses gateway as a web proxy.
+# ipsal (Internet Protocol Suite Application Layer)
+# runs some core services, like DHCP, NTP
+# https://en.wikipedia.org/wiki/Internet_protocol_suite
+
+# Use a kickstart file to install and configure the OS.
+
 - name: kickstart a new machine 
-  hosts: gateway
+  hosts: ipsal
   become: yes
   gather_facts: no
   serial: 1
@@ -28,33 +35,29 @@
 
 
 - name: configure new server machine
-  hosts: gateway
+  hosts: ipsal
   become: yes
   gather_facts: no
+  serial: 1
   vars_files:
   - vault-rhsm.yml
-  serial: 1
+  environment:
+    http_proxy: http://gateway.lab.example.com:3128
+    HTTPS_PROXY: http://gateway.lab.example.com:3128
+    no_proxy: localhost,127.0.0.1,example.com
   roles:
   - nick.platform.managed_node
+  - name: "tell ipsal the gateway address is {{ lab_net_prefix }}.3"
+    role: nick.platform.hosts_record
+    # !!! hardcoded
+    vars:
+      ip_address: "{{ lab_net_prefix }}.3"
+      fqdn: gateway.lab.example.com
+      host: gateway
   - nick.platform.cdn_repo_consumer
   - nick.platform.latest_packages
   - nick.platform.server_cert
-  - nick.platform.squid_proxy
-  - nick.platform.dns_forwarder
-
-    # !!! add time_server?
-    # or to ipsal
-    # https://hardiman.consulting/rhel/9/time/chrony.html
-    
-# smoke tests 
-# !!! add tests
-# squid
-#   curl -O -L "https://www.redhat.com/index.html" -x "gateway.lab.example.com:3128"
-# dns
-#   dig @192.168.134.5 dns.lab.example.com
-#   dig @192.168.134.5 192.168.134.5
-#   dig @192.168.134.5 www.google.com
-#   dig @192.168.134.5 142.250.179.22
+  - nick.platform.dhcp_server
 
 
 - name: keep image and config of the new machine
@@ -69,4 +72,3 @@
   - name: "delete the machine"
     role: nick.platform.libvirt_machine_delete
     delegate_to: "{{ groups['hypervisor'][0] }}"
-

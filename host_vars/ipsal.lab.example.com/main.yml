@@ -5,10 +5,11 @@
 #   https://github.com/nickhardiman/libvirt-guest/blob/main/defaults/main.yml
 
 # compute 
+# default 4 cores
 
 # storage
+# smaller than the 
 # default 30GB disk
-# storage
 # size in GiB
 disk_size: 13
 # Add up the sizes below and make sure they fit in the disk_size.
@@ -26,12 +27,16 @@ lv_var: 4096
 # network
 # MAC addresses are listed here.
 #   https://hardiman.consulting/rhel/9/unsorted/host1-libvirt-network.html
+lab_net_short_name: lab
+lab_libvirt_name:   "net{{ lab_net_short_name }}0"
+lab_net_prefix: "192.168.134"
+lab_mac_prefix: "52:54:00:02"
 nics:
 - 
   name: enp1s0
   mac: "{{ lab_mac_prefix }}:00:04"
-  net: net-lab
-  # I'm giving this one a static IP. 
+  net: "{{ lab_libvirt_name }}"
+  # IP is static. No DHCP in lab network yet.  
   # see kickstart. 
   ip: "{{ lab_net_prefix }}.4"
 
@@ -42,16 +47,13 @@ net_services:
   - dhcp
 
 # OS
-host: dhcp
+host: ipsal
 fqdn: "{{ host }}.lab.example.com"
 RPMs: 
 - dhcp-server
 - python3-cryptography
 
-
 # kickstart
-kickstart_template: dhcp.ks.j2
-
+kickstart_template: "{{ fqdn }}.ks.j2"
 
 # accounts
-

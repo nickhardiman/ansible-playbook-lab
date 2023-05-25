@@ -28,8 +28,12 @@
 # a second interface on the lab network.
 # It runs squid to proxy web requests to the Internet, and 
 # bind to proxy DNS requests to the Internet. 
-- ansible.builtin.import_playbook: image-gateway.yml
-- ansible.builtin.import_playbook: machine-gateway.yml
+
+#- ansible.builtin.import_playbook: image-gateway.yml
+#- ansible.builtin.import_playbook: machine-gateway.yml
+- ansible.builtin.import_playbook: image-ipsal.yml
+- ansible.builtin.import_playbook: machine-ipsal.yml
+
 
 
 
@@ -43,7 +47,7 @@
 
 
 
-- ansible.builtin.import_playbook: machine-dhcp.yml
+
 # DHCP is now available. 
 # Interfaces can now get info from DHCP.
 - ansible.builtin.import_playbook: machine-dns.yml
