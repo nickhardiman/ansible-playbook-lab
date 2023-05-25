@@ -16,5 +16,14 @@ server_secret_passphrase: redhat
 ca_secret_passphrase: redhat
 
 
-
+# network
+# MAC addresses are listed here.
+#   https://hardiman.consulting/rhel/9/unsorted/host1-libvirt-network.html
+public_net_short_name: public
+public_libvirt_name:   "net{{ public_net_short_name }}0"
+public_mac_prefix: "52:54:00:00"
+lab_net_short_name: lab
+lab_libvirt_name:   "net{{ lab_net_short_name }}0"
+lab_net_prefix: "192.168.135"
+lab_mac_prefix: "52:54:00:02"
 

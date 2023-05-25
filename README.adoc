@@ -236,12 +236,13 @@ ansible-playbook  --vault-pass-file ~/my-vault-pass  main.yml
 
 Or override your RHSM values. 
 
+!!!  now auto-attach instead of   --extra-var="rhsm_pool_id=my_pool_id"
+
 [source,shell]
 ....
 sudo ansible-playbook main.yml \
     --extra-var="rhsm_user=my_user"  \
-    --extra-var='rhsm_password=my_password'  \
-    --extra-var="rhsm_pool_id=my_pool_id"
+    --extra-var='rhsm_password=my_password' 
 ....
 
 Or build just one machine and change a few details. 
