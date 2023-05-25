@@ -15,7 +15,7 @@
   roles: 
   - role: nick.platform.libvirt_storage
     delegate_to: "{{ groups['hypervisor'][0] }}"
-  - role: nick.platform.libvirt_machine
+  - role: nick.platform.libvirt_machine_image
     delegate_to: "{{ groups['hypervisor'][0] }}"
   - role: nick.platform.hosts_record
     vars:

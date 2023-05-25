@@ -200,6 +200,7 @@ ansible-galaxy collection install -r collections/requirements.yml
 ansible-galaxy role install -r roles/requirements.yml 
 ....
 
+
 === Add Red Hat Subscription account to the vault
 
 * Sign up for free at https://developers.redhat.com/.
@@ -230,7 +231,7 @@ Build the network and machines.
 
 [source,shell]
 ....
-ansible-playbook main.yml
+ansible-playbook  --vault-pass-file ~/my-vault-pass  main.yml
 ....
 
 Or override your RHSM values. 

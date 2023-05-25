@@ -17,7 +17,7 @@
     vars:
       kickstart_template: dhcp.ks.j2
     delegate_to: "{{ groups['hypervisor'][0] }}"
-  - role: nick.platform.libvirt_machine
+  - role: nick.platform.libvirt_machine_image
     delegate_to: "{{ groups['hypervisor'][0] }}"
   - role: nick.platform.hosts_record
     vars:
