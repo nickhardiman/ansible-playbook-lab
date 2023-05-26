@@ -18,12 +18,19 @@ nics:
 - 
   name: enp1s0
   mac: "{{ lab_mac_prefix }}:00:10"
-  net: net-lab
+  net: "{{ lab_libvirt_name }}"
   # !!! get rid of this?
-  # IP from DHCP
+  # used in 
+  # ansible_collections/nick/platform/roles/hosts_record/tasks/main.yml
+  # interface IP provided by DHCP, prob. shouldnt be here too. 
   ip: "{{ lab_net_prefix }}.10"
 
 
+net_services:
+  - ssh
+  - http
+  - https
+  - dhcp
 
 # OS
 host: id
@@ -36,6 +43,7 @@ RPMs:
 #   ansible-freeipa
 
 # kickstart
+kickstart_template: "kvm-guest.ks.j2"
 
 # accounts
 

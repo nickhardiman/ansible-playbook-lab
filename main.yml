@@ -32,9 +32,15 @@
 # !!!
 #- ansible.builtin.import_playbook: image-gateway.yml
 #- ansible.builtin.import_playbook: machine-gateway.yml
+#- ansible.builtin.import_playbook: image-ipsal.yml
+#- ansible.builtin.import_playbook: machine-ipsal.yml
 
-- ansible.builtin.import_playbook: image-ipsal.yml
-- ansible.builtin.import_playbook: machine-ipsal.yml
+
+# DHCP is now available. 
+# Interfaces can now get info from DHCP.
+- ansible.builtin.import_playbook: image-id.yml
+- ansible.builtin.import_playbook: machine-id.yml
+
 
 
 
@@ -49,9 +55,6 @@
 
 
 
-
-# DHCP is now available. 
-# Interfaces can now get info from DHCP.
 - ansible.builtin.import_playbook: machine-dns.yml
 # DNS is now available. 
 # No more need for /etc/hosts records.
@@ -66,7 +69,6 @@
 - ansible.builtin.import_playbook: machine-log.yml
 # This playbook installs prometheus and grafana, which needs to use the gateway proxy to download Internet resources.
 - ansible.builtin.import_playbook: machine-metric.yml
-- ansible.builtin.import_playbook: machine-id.yml
 
 # test the new stack
 - ansible.builtin.import_playbook: test-stack.yml
