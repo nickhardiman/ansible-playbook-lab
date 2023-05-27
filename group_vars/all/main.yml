@@ -19,11 +19,47 @@ ca_secret_passphrase: redhat
 # network
 # MAC addresses are listed here.
 #   https://hardiman.consulting/rhel/9/unsorted/host1-libvirt-network.html
+#
 public_net_short_name: public
 public_libvirt_name:   "net{{ public_net_short_name }}0"
 public_mac_prefix: "52:54:00:00"
+#
 lab_net_short_name: lab
 lab_libvirt_name:   "net{{ lab_net_short_name }}0"
 lab_net_prefix: "192.168.135"
 lab_mac_prefix: "52:54:00:02"
-
+lab_domain: lab.example.com
+lab_reverse_zone: "135.168.192.in-addr.arpa"
+#
+# !!! duplicates. defined here and in host_vars
+address:
+- 
+  host: gateway
+  mac: "{{ lab_mac_prefix }}:00:03"
+  ip_last_octet: "3"
+  ipv4: "{{ lab_net_prefix + '.3' }}"
+- 
+  host: ipsal
+  mac: "{{ lab_mac_prefix }}:00:04"
+  ip_last_octet: "4"
+  ipv4: "{{ lab_net_prefix + '.4' }}"
+- 
+  host: id
+  mac: "{{ lab_mac_prefix }}:00:05"
+  ip_last_octet: "5"
+  ipv4: "{{ lab_net_prefix  + '.5' }}"
+- 
+  host: message
+  mac: "{{ lab_mac_prefix }}:00:06"
+  ip_last_octet: "6"
+  ipv4: "{{ lab_net_prefix  + '.6' }}"
+- 
+  host: monitor
+  mac: "{{ lab_mac_prefix }}:00:07"
+  ip_last_octet: "7"
+  ipv4: "{{ lab_net_prefix  + '.7' }}"
+- 
+  host: git
+  mac: "{{ lab_mac_prefix }}:00:08"
+  ip_last_octet: "8"
+  ipv4: "{{ lab_net_prefix  + '.8' }}"
