@@ -51,12 +51,12 @@
       ip_address: "{{ lab_net_prefix }}.3"
       fqdn: gateway.lab.example.com
       host: gateway
-  # !!! should be supplied by DHCP
+  # !!! should be supplied by DHCP,
   #- nick.platform.dns_client_of_gateway
   - nick.platform.cdn_repo_consumer
   - nick.platform.latest_packages
   - nick.platform.server_cert
-  - nick.integration.ipa_server
+  - nick.platform.ipa_server
   - nick.platform.dns_records
 
 
