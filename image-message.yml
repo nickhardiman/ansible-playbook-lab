@@ -1,7 +1,5 @@
 ---
-
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/installing_identity_management/index
-
 
 # The "id" machine has one interface on the private libvirt network.
 # It uses gateway as a web proxy.
@@ -44,15 +42,6 @@
     no_proxy: localhost,127.0.0.1,example.com
   roles:
   - nick.platform.managed_node
-  # - name: "tell ipsal the gateway address is {{ lab_net_prefix }}.3"
-  #   role: nick.platform.hosts_record
-  #   # !!! hardcoded
-  #   vars:
-  #     ip_address: "{{ lab_net_prefix }}.3"
-  #     fqdn: gateway.lab.example.com
-  #     host: gateway
-  # # !!! should be supplied by DHCP,
-  #- nick.platform.dns_client_of_gateway
   - nick.platform.cdn_repo_consumer
   - nick.platform.latest_packages
   - nick.platform.server_cert

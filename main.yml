@@ -43,34 +43,18 @@
 # # DNS is now available. 
 # - ansible.builtin.import_playbook: image-message.yml
 # - ansible.builtin.import_playbook: machine-message.yml
+# This playbook installs code from third-party sites.
+# * Elastic stack
+# * prometheus and grafana
+- ansible.builtin.import_playbook: image-monitor.yml
+- ansible.builtin.import_playbook: machine-monitor.yml
 # This playbook installs Gitlab from a third-party site.
-# It needs to use the gateway proxy to download Internet resources.
 - ansible.builtin.import_playbook: image-git.yml
 - ansible.builtin.import_playbook: machine-git.yml
 
-
-- name: '!!! dev exit'
-  hosts: hypervisor
-  gather_facts: no
-  tasks:
-  - ansible.builtin.fail: 
-# !!!
-
-
-
-
-# No more need for /etc/hosts records.
+# local reposync
 # So many RPM packages to mirror! This one takes an hour.
-- ansible.builtin.import_playbook: machine-repo.yml
-# Local RPM repositories are now available. 
-# OS can now install and update packages from local repos.
-# This playbook installs Gitlab from a third-party site.
-# It needs to use the gateway proxy to download Internet resources.
-- ansible.builtin.import_playbook: machine-git.yml
-# This playbook installs Elastic stack, which needs to use the gateway proxy to download Internet resources.
-- ansible.builtin.import_playbook: machine-log.yml
-# This playbook installs prometheus and grafana, which needs to use the gateway proxy to download Internet resources.
-- ansible.builtin.import_playbook: machine-metric.yml
+#- ansible.builtin.import_playbook: machine-repo.yml
 
 # test the new stack
 - ansible.builtin.import_playbook: test-stack.yml

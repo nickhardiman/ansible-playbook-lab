@@ -11,6 +11,7 @@ os_variant: rhel8.5
 
 # compute 
 # default 2 cores
+# default 4GiB memory
 
 # storage
 # default 30GB disk
@@ -21,11 +22,11 @@ os_variant: rhel8.5
 nics:
 - 
   name: enp1s0
-  mac: "{{ lab_mac_prefix }}:00:07"
-  net: net-lab
+  mac: "{{ lab_mac_prefix }}:00:08"
+  net: "{{ lab_libvirt_name }}"
   # !!! get rid of this?
   # IP from DHCP
-  ip: "{{ lab_net_prefix }}.7"
+  ip: "{{ lab_net_prefix }}.8"
 
 net_services:
   - ssh
@@ -44,6 +45,7 @@ RPMs:
       - tzdata
 
 # kickstart
+kickstart_template: "kvm-guest.ks.j2"
 
 # accounts
 

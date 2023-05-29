@@ -59,6 +59,7 @@
   - nick.platform.latest_packages
   - nick.platform.server_cert
   - nick.platform.dhcp_server
+  - nick.platform.ntp_server
 
 
 - name: keep image and config of the new machine
