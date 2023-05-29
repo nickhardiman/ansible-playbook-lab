@@ -88,9 +88,14 @@
 
 
 # test 
-# prometheus
-# curl http://localhost:9090/
-# curl http://localhost:3000/
+# prometheus - no password
+# curl http://monitor.lab.example.com:9090/
+# grafana - admin/redhat (see grafana_security above)
+# curl http://monitor.lab.example.com:3000/
+# ELK - elastic API
+# http://monitor.lab.example.com:9200/
+# ELK - kibana
+# http://monitor.lab.example.com:5601/
 
 
 - name: keep image and config of the new machine
