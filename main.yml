@@ -29,34 +29,32 @@
 # It runs squid to proxy web requests to the Internet, and 
 # bind to proxy DNS requests to the Internet. 
 
-# !!!
-#- ansible.builtin.import_playbook: image-gateway.yml
-#- ansible.builtin.import_playbook: machine-gateway.yml
-#- ansible.builtin.import_playbook: image-ipsal.yml
-#- ansible.builtin.import_playbook: machine-ipsal.yml
-
-
-# DHCP is now available. 
-# Interfaces can now get info from DHCP.
-- ansible.builtin.import_playbook: image-id.yml
-- ansible.builtin.import_playbook: machine-id.yml
-
-
-
 
 
 # !!!
+# - ansible.builtin.import_playbook: image-gateway.yml
+# - ansible.builtin.import_playbook: machine-gateway.yml
+# - ansible.builtin.import_playbook: image-ipsal.yml
+# - ansible.builtin.import_playbook: machine-ipsal.yml
+# # DHCP is now available. 
+# # Interfaces can now get info from DHCP.
+# - ansible.builtin.import_playbook: image-id.yml
+# - ansible.builtin.import_playbook: machine-id.yml
+# DNS is now available. 
+- ansible.builtin.import_playbook: image-message.yml
+- ansible.builtin.import_playbook: machine-message.yml
+
+
 - name: '!!! dev exit'
   hosts: hypervisor
   gather_facts: no
   tasks:
   - ansible.builtin.fail: 
+# !!!
 
 
 
 
-- ansible.builtin.import_playbook: machine-dns.yml
-# DNS is now available. 
 # No more need for /etc/hosts records.
 # So many RPM packages to mirror! This one takes an hour.
 - ansible.builtin.import_playbook: machine-repo.yml

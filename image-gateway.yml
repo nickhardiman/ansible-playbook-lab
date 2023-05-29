@@ -63,10 +63,12 @@
   gather_facts: no
   serial: 1
   roles: 
-  - name: "copy the volume file and config"
+  # create $FQDN-base.qcow2 image and $FQDN.xml config.
+  # if the $FQDN-base.qcow2 file already exists, this role does not change anything. 
+  - name: "copy the volume file and config, then delete the machine"
     role: nick.platform.libvirt_machine_image
     delegate_to: "{{ groups['hypervisor'][0] }}"
-  - name: "delete the machine"
-    role: nick.platform.libvirt_machine_delete
-    delegate_to: "{{ groups['hypervisor'][0] }}"
+  # - name: "delete the machine"
+  #   role: nick.platform.libvirt_machine_delete
+  #   delegate_to: "{{ groups['hypervisor'][0] }}"
 
