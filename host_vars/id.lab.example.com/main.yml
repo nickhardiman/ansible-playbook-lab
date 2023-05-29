@@ -25,7 +25,6 @@ nics:
   # interface IP provided by DHCP, prob. shouldnt be here too. 
   ip: "{{ lab_net_prefix }}.5"
 
-
 net_services:
   - ssh
   - http

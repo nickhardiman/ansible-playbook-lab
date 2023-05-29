@@ -40,9 +40,13 @@
 # # Interfaces can now get info from DHCP.
 # - ansible.builtin.import_playbook: image-id.yml
 # - ansible.builtin.import_playbook: machine-id.yml
-# DNS is now available. 
-- ansible.builtin.import_playbook: image-message.yml
-- ansible.builtin.import_playbook: machine-message.yml
+# # DNS is now available. 
+# - ansible.builtin.import_playbook: image-message.yml
+# - ansible.builtin.import_playbook: machine-message.yml
+# This playbook installs Gitlab from a third-party site.
+# It needs to use the gateway proxy to download Internet resources.
+- ansible.builtin.import_playbook: image-git.yml
+- ansible.builtin.import_playbook: machine-git.yml
 
 
 - name: '!!! dev exit'
