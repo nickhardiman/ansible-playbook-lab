@@ -14,12 +14,12 @@
 #
 # Work around some chicken-and-egg problems. 
 # * No DHCP yet, so the first two machines have static IP addresses.
-# * No DNS yet, so the first three have /etc/hosts records. 
+# * No DNS yet, so use /etc/hosts records. 
 # * No local RPM repositories yet, so the first four update from RHSM CDN 
-#   (Red Hat Subscription Management Content Delivery Network). 
-#   An account is required for registering with RHSM.
+# Use an account for RPM package downloads from 
+# RHSM CDN (Red Hat Subscription Management Content Delivery Network). 
 # Work around some access problems.
-# * No NAT, so the first four machines need to use the gateway proxy.
+# * No NAT, so use the gateway proxy.
 # * The install host does not use the new network's DNS. 
 #   Add /etc/hosts records so the install host can find all these machines.
 #
@@ -28,21 +28,18 @@
 # a second interface on the lab network.
 # It runs squid to proxy web requests to the Internet, and 
 # bind to proxy DNS requests to the Internet. 
-
-
-
-# !!!
-# - ansible.builtin.import_playbook: image-gateway.yml
-# - ansible.builtin.import_playbook: machine-gateway.yml
-# - ansible.builtin.import_playbook: image-ipsal.yml
-# - ansible.builtin.import_playbook: machine-ipsal.yml
-# # DHCP is now available. 
-# # Interfaces can now get info from DHCP.
-# - ansible.builtin.import_playbook: image-id.yml
-# - ansible.builtin.import_playbook: machine-id.yml
-# # DNS is now available. 
-# - ansible.builtin.import_playbook: image-message.yml
-# - ansible.builtin.import_playbook: machine-message.yml
+- ansible.builtin.import_playbook: image-gateway.yml
+- ansible.builtin.import_playbook: machine-gateway.yml
+# ipsal (Internet Protocol Services, Application Layer) provides dhcp and ntp
+- ansible.builtin.import_playbook: image-ipsal.yml
+- ansible.builtin.import_playbook: machine-ipsal.yml
+# DHCP is now available. 
+# Interfaces can now get info from DHCP.
+- ansible.builtin.import_playbook: image-id.yml
+- ansible.builtin.import_playbook: machine-id.yml
+# DNS is now available. 
+- ansible.builtin.import_playbook: image-message.yml
+- ansible.builtin.import_playbook: machine-message.yml
 # This playbook installs code from third-party sites.
 # * Elastic stack
 # * prometheus and grafana
