@@ -1,18 +1,24 @@
-= Ansible playbook for setting up a network of VMs
+= Ansible playbook for turning a PC into a set of core service VMs
 
 Ansible helps me build my home lab. 
-I'm halfway through turning a PC into a hypervisor that runs a pile-load (that's the technical term) of Virtual Machines. 
-This needs work. 
-I mean, who names a network *test0*?
+This playbook turns a PC running RHEL 9 into a hypervisor running a pile-load (that's the technical term) of Virtual Machines. 
+Each VM runs a set of services that support my home lab. 
+
+* *gateway* hosts Bind and Squid
+* *ipsal* (Internet Protocol Services, Application Level) hosts DHCPd and NTPd
+* *id* hosts Red Hat IDM (LDAP, CA, DNS)
+* *message* hosts Postfix
+* *monitor* hosts Prometheus, Grafana, and Elastic
+* *git* hosts Gitlab
+
+Under construction. Sections marked with !!! and ??? are notes to self. 
 
 If you can read Ansible's YAML, start with   
 https://github.com/nickhardiman/ansible-playbook-lab/blob/main/main.yml[main.yml]. 
 
-Each machine has one job to do.
-For instance, *dhcp* is a VM that runs the core Internet service dhcp, *git* runs the developer service GitLab, and *metric* runs the time series database prometheus.
-
 This playbook relies on a bunch (that's another technical term) of collections, including my https://github.com/nickhardiman/ansible-collection-platform[ansible-collection-platform].
 Check out requirements.yml, described below.
+
 
 ==  requirements 
 
@@ -32,16 +38,12 @@ https://github.com/nickhardiman/ansible-playbook-lab/blob/main/machine-hyperviso
 
 image::core-network.drawio.png[title="guests"] 
 
-
-The https://github.com/nickhardiman/ansible-playbook-lab/blob/main/group_vars/all/main.yml[defaults file] defines a lot of these values. 
-For instance, 
-MAC addresses are set to ** 52:54:00:03:00:* ** and 
+The https://github.com/nickhardiman/ansible-playbook-lab/blob/main/group_vars/all/main.yml[defaults file] defines a lot of values. 
+For instance, by default 
+MAC addresses are set to ** 52:54:00:03:00:* **,  and 
 IPv4 addresses are set to ** 192.168.134.* **. 
-The domain *lab.example.com* is set per machine - check out dhcp's 
-https://github.com/nickhardiman/ansible-playbook-lab/blob/main/host_vars/dhcp.lab.example.com/main.yml[host vars file].
-
-Each of these hosts has a corresponding tasks file eg. 
-machine-gateway.yml
+Check out DHCP's 
+https://github.com/nickhardiman/ansible-collection-platform/blob/main/roles/dhcp_server/templates/dhcpd.conf.j2[config].
 
 .guests attached to bridges
 [%header,format=csv]
@@ -53,19 +55,13 @@ gateway,      enp1s0,    52:54:00:00:00:03, 192.168.1.3,     home
 *netlab0*,  *brlab0*,   52:54:00:03:00:01, 192.168.134.1,   lab.example.com
  ,           ,           52:54:00:03:00:02, 192.168.134.2,   lab.example.com
 gateway,      enp2s0,    52:54:00:03:00:03, 192.168.134.3,   lab.example.com
-dhcp,         enp1s0,    52:54:00:03:00:04, 192.168.134.4,   lab.example.com
-dns,          enp1s0,    52:54:00:03:00:05, 192.168.134.5,   lab.example.com
-time,         enp1s0,    52:54:00:03:00:06, 192.168.134.6,   lab.example.com
-git,          enp1s0,    52:54:00:03:00:07, 192.168.134.7,   lab.example.com
-log,          enp1s0,    52:54:00:03:00:08, 192.168.134.8,   lab.example.com
-metric,       enp1s0,    52:54:00:03:00:09, 192.168.134.9,   lab.example.com
-id,           enp1s0,    52:54:00:03:00:10, 192.168.134.10,  lab.example.com
-smtp,         enp1s0,    52:54:00:03:00:11, 192.168.134.11,  lab.example.com
-repo-rhel8,   enp1s0,    52:54:00:03:00:12, 192.168.134.12,  lab.example.com
-repo-rhel9,   enp1s0,    52:54:00:03:00:13, 192.168.134.13,  lab.example.com
-mail,         enp1s0,    52:54:00:03:00:14, 192.168.134.14,  lab.example.com
-
+ipsal,        enp1s0,    52:54:00:03:00:04, 192.168.134.4,   lab.example.com
+id,           enp1s0,    52:54:00:03:00:05, 192.168.134.5,   lab.example.com
+message,      enp1s0,    52:54:00:03:00:06, 192.168.134.6,   lab.example.com
+monitor,      enp1s0,    52:54:00:03:00:07, 192.168.134.7,   lab.example.com
+git,          enp1s0,    52:54:00:03:00:08, 192.168.134.8,   lab.example.com
 |===
+
 
 == cheat sheet
 
@@ -265,30 +261,6 @@ sudo ansible-playbook machine-id.yml  \
 ....
 
 
-!!! possibly broken from here on down. 
-
-Destroy everything. 
-This has the power to remove any local libvirt virtual machine, so it's dangerous. 
-
-[source,shell]
-....
-ansible-playbook  --ask-become-pass  delete.yml
-....
-
-or something similar like
-
-[source,shell]
-....
-ansible-playbook \
-  --inventory=./inventory-hypervisor.ini  \
-  --become-password-file=~/my-pass \
-  --extra-var='hosts=["kvm-guest"]' \
-  delete.yml 
-....
-
-
-
-
 === run, the AAP2 way
 
 Create
@@ -308,18 +280,20 @@ ansible-navigator run main.yml \
 ....
 
 
-=== check the console 
+=== check the VM console 
 
-Each playbook exits when the build starts.
-A fresh kickstart install takes about 5 minutes, then the VM is powered down. 
+The OS takes a couple minutes to install on a new VM. 
+You can't see much from the playbook output - each playbook exits when the build starts.
 
-Use virsh to check.
+Use virsh to see what's happening.
 
 [source,shell]
 ....
 sudo virsh list -all
-sudo virsh console kvm-guest.lab.example.com
+sudo virsh console gateway.lab.example.com
 ....
+
+A fresh kickstart install takes about 5 minutes, then the VM is powered down. 
 
 If you want to login to the console, two accounts are configured. 
 
