@@ -1,10 +1,12 @@
+# Set up the hypervisor 
+
 # !!! make a new role machine-hypervisor-configure.yml
-# and migrate much of this crap there. 
+# and migrate much of this crap to that and to collection roles. 
 
 # run
 # log into hypervisor
 # download and run this script
-#   curl -o - https://raw.githubusercontent.com/nickhardiman/homelab/main/machine-hypervisor.sh | bash -x
+#   curl -o - https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh | bash -x
 
 
 # SSH security
@@ -79,10 +81,21 @@ cd ~/ansible/collections/ansible/collections/ansible_collections/nick/
 git clone https://github.com/nickhardiman/ansible-collection-platform.git platform
 
 
-# turn the host into a hypervisor
-# get my playbook.
+# Get my lab playbook.
 cd ~/ansible/
 git clone https://github.com/nickhardiman/ansible-playbook-lab.git
 cd ansible-playbook-lab
-ansible-playbook --ask-become-pass machine-hypervisor.yml
 
+
+# Download Ansible libraries.
+# Get a token from https://console.redhat.com/ansible/automation-hub/token#
+# Set an environment variable.
+export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=eyJhbGciOi...
+# Install collections. 
+ansible-galaxy collection install -r collections/requirements.yml 
+# Install roles. 
+ansible-galaxy role install -r roles/requirements.yml 
+
+
+# set up the QEMU/KVM/libvirt hypervisor
+ansible-playbook --ask-become-pass machine-hypervisor.yml
