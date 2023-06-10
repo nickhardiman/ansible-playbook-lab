@@ -31,7 +31,7 @@
               route:
                 - network: 192.168.136.0
                   prefix: 24
-                  gateway: 192.168.1.136
+                  gateway: 192.168.1.195
             state: up
 
   tasks:
