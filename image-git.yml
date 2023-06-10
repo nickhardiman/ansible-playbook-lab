@@ -1,9 +1,9 @@
 ---
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/managing_networking_infrastructure_services/providing-dhcp-services_networking-infrastructure-services#doc-wrapper
 
-# The "message" machine has one interface on the private libvirt network.
+# The "git" machine has one interface on the private libvirt network.
 # It uses gateway as a web proxy.
-# it hosts smtp, will host imap, pop3 services, other messaging?
+# it hosts gitlab.
 
 # Use a kickstart file to install and configure the OS.
 
