@@ -87,7 +87,7 @@ sets up everything on a freshly installed host.
 curl -o - https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh 
 ....
 
-# Get a token from https://console.redhat.com/ansible/automation-hub/token#
+* Get a token from https://console.redhat.com/ansible/automation-hub/token#
 * Edit the script and set ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
 * Run the script.
 
