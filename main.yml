@@ -5,6 +5,8 @@
 # git, the hypervisor, Ansible user, image storage and virtual network.
 # A bootstrap shell script sets these up.
 # See instructions in the README and machine-hypervisor.sh
+- ansible.builtin.import_playbook: machine-hypervisor.yml
+- ansible.builtin.import_playbook: host-network.yml
 #
 # Each of these playbooks can be run separately. 
 # For machines that need to register with RHSM, use a vault file.
