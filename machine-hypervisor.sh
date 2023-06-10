@@ -4,7 +4,7 @@
 # run
 # log into hypervisor
 # download and run this script
-#   curl -o - https://raw.githubusercontent.com/nickhardiman/homelab/main/machine-hypervisor-configure.sh | bash -x
+#   curl -o - https://raw.githubusercontent.com/nickhardiman/homelab/main/machine-hypervisor.sh | bash -x
 
 
 # SSH security
@@ -13,12 +13,6 @@
 # for more information, see
 #   man sshd_config
 #echo "AuthenticationMethods publickey" >> /etc/ssh/sshd_config
-
-
-# install Ansible
-sudo dnf install --assumeyes ansible-core
-# install Ansible libvirt collection
-sudo ansible-galaxy collection install community.libvirt --collections-path /usr/share/ansible/collections
 
 
 # install git
@@ -30,6 +24,8 @@ git config --global push.default      simple
 # default timeout is 900 seconds (https://git-scm.com/docs/git-credential-cache)
 git config --global credential.helper 'cache --timeout=1200'
 git config --global pull.rebase false
+# check 
+git config --global --list
 
 
 # Add an Ansible user account.
@@ -64,19 +60,28 @@ ssh -i /home/nick/.ssh/ansible-key.priv ansible_user@localhost  id
 # options kvm_amd nested=1
 
 
+# install Ansible
+sudo dnf install --assumeyes ansible-core
+# install Ansible libvirt collection
+sudo ansible-galaxy collection install community.libvirt --collections-path /usr/share/ansible/collections
+# check 
+ls /usr/share/ansible/collections/ansible_collections/community/
+
+
 # get my libvirt collection.
 # I'm not using ansible-galaxy because I am actively developing this role.
 # Check out the directive in ansible.cfg in some playbooks.
-mkdir -p ~/ansible/collections
-cd ~/ansible/collections
+mkdir -p ~/ansible/collections/ansible_collections/nick/
+cd ~/ansible/collections/ansible/collections/ansible_collections/nick/
 # If the repo has already been cloned, git exits with this error message. 
 #   fatal: destination path 'libvirt-host' already exists and is not an empty directory.
 # !!! not uploaded
-git clone https://github.com/nickhardiman/ansible-collection-platform.git
+git clone https://github.com/nickhardiman/ansible-collection-platform.git platform
 
 
 # turn the host into a hypervisor
 # get my playbook.
+cd ~/ansible/
 git clone https://github.com/nickhardiman/ansible-playbook-lab.git
 cd ansible-playbook-lab
 ansible-playbook --ask-become-pass machine-hypervisor.yml
