@@ -5,6 +5,8 @@
 #   https://github.com/nickhardiman/libvirt-guest/blob/main/defaults/main.yml
 
 # compute 
+# default 2 cores
+# default 4GiB memory
 
 # storage
 # default 30GB disk

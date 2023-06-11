@@ -20,7 +20,7 @@
   - name: "update /etc/hosts on install host {{ groups['install_host'][0] }}"
     role: nick.platform.hosts_record
     vars:
-      ip_address: "{{ nics[0]['ip'] }}"
+      ip_address: "{{ nics[1]['ip'] }}"
     delegate_to: "{{ groups['install_host'][0] }}"
   - name: "run machine (it stops after install)"
     role: nick.platform.libvirt_machine_start
