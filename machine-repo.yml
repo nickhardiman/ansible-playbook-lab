@@ -36,7 +36,7 @@
   # local_repo_supplier depends on ansible_distribution_major_version
   gather_facts: no
   vars_files:
-  - vault-rhsm.yml
+  - vault-credentials.yml
   serial: 1
   environment:
     http_proxy: http://gateway.lab.example.com:3128

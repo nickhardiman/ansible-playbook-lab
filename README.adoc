@@ -243,9 +243,9 @@ Red Hat's CDN (Content Delivery Network).
 
 [source,shell]
 ....
-vim vault-rhsm.yml
+vim vault-credentials.yml
 echo 'my vault password' >  ~/my-vault-pass
-ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-rhsm.yml  
+ansible-vault encrypt --vault-pass-file ~/my-vault-pass vault-credentials.yml  
 ....
 
 

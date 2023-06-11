@@ -10,6 +10,8 @@ my_offline_token: xxxxx
 
 # accounts
 user_ansible_password: Password;1
+
+# !!! this no longer required?
 # server certificate
 server_dir: /root/ca
 server_secret_passphrase: redhat
