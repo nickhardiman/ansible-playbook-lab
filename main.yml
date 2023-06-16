@@ -1,6 +1,11 @@
 # Build the virtual machine hardware, install OS, and install apps.
-#
-#
+
+# !!! firewall port opening 
+# !!! gone walkies 
+# eg. 
+# git.lab.example.com requires firewall-cmd --add-service https --permanent
+
+
 # prerequisites 
 # git, the hypervisor, Ansible user, image storage and virtual network.
 # A bootstrap shell script sets these up.
