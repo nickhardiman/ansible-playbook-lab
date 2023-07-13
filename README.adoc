@@ -73,163 +73,35 @@ A fresh minimal install is fine.
 Only tested on a box with one ethernet interface, plugged into the network.
 
 
-=== install the KVM/QEMU hypervisor 
+=== install dependencies
 
 Script 
 https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh[machine-hypervisor.sh] 
 sets up everything on a freshly installed host. 
+This works with RHEL and Fedora. 
+Some things, like that "dnf install" line, won't work on other OSs.
 
 * Log into the hypervisor machine.
 * Download the script.
 
 [source,shell]
 ....
-curl -o - https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh 
+curl -O https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh 
 ....
 
-* Get a token from https://console.redhat.com/ansible/automation-hub/token#
-* Edit the script and set ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN
-* Run the script.
+* Read the script and follow the instructions.
 
 
-=== create ansible_user 
-
+The script creates a new user named _ansible_user_
+along with a key pair named _ansible-key.priv_ and _ansible-key.pub_ 
+and sudoers privilege escalation.
 The playbook uses _ansible_user_ to connect to all the machines, 
-along with a key pair named _ansible-key.priv_ and _ansible-key.pub_. 
 
-If you ran the 
-https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh[machine-hypervisor.sh] 
-script, you already have this. 
-
-If you want to hand-crank it, the "create ansible_user" part is copied here. 
-
-!!! didn't I translate this to a role? 
-
-Use the root account.
-
-Create a key pair for ansible_user. 
-I called this ansible-key.priv and ansible-key.pub. 
-
-[source,shell]
-....
-# create a new keypair 
-ssh-keygen -f ./ansible-key -q -N ""
-mv ansible-key  ansible-key.priv
-....
-
-Create the ansible_user account. 
-
-[source,shell]
-....
-# create the user
-useradd ansible_user
-....
-
-Copy the keys to ansible_user's SSH config directory. 
-
-[source,shell]
-....
-# copy keys
-mkdir /home/ansible_user/.ssh
-chmod 0700 /home/ansible_user/.ssh
-cp ansible-key.priv  /home/ansible_user/.ssh/id_rsa
-chmod 0600 /home/ansible_user/.ssh/id_rsa
-cp ansible-key.pub  /home/ansible_user/.ssh/id_rsa.pub
-# SSH to localhost with key-based login
-cat ansible-key.pub >> /home/ansible_user/.ssh/authorized_keys
-chmod 0600 /home/ansible_user/.ssh/authorized_keys
-chown -R ansible_user:ansible_user /home/ansible_user/.ssh
-# allow passwordless sudo
-echo 'ansible_user      ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/ansible_user 
-....
-
-Allow passwordless sudo.
-
-[source,shell]
-....
-echo 'ansible_user      ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/ansible_user 
-....
-
-Copy the keys to your SSH config directory. 
-
-[source,shell]
-....
-# copy keys
-cp ansible-key.priv  /home/nick/.ssh/
-cp ansible-key.pub  /home/nick/.ssh/
-....
-
-Add the location to ansible.cfg. 
-
-[source,shell]
-....
-private_key_file = /home/nick/.ssh/ansible-key.priv
-....
-
-Check your work. 
-
-[source,shell]
-....
-ssh -i /home/nick/.ssh/ansible-key.priv ansible_user@localhost  id
-....
+The script also clones the playbook repo and installs dependencies. 
 
 
-=== clone the playbook repo 
 
-This works with RHEL and Fedora. 
-Some things, like that "dnf install" line, won't work on other OSs.
-
-If you ran the 
-https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh[machine-hypervisor.sh] 
-script, you already have this. 
-
-* Install packages.
-* Get this code.
-
-[source,shell]
-....
-# install packages
-dnf install git ansible
-# get code
-REPOSITORY=ansible-playbook-lab
-git clone https://github.com/nickhardiman/$REPOSITORY
-cd $REPOSITORY
-....
-
-
-=== install collections and roles to ~/.ansible/
-
-Some collections, like ansible.posix, are Red Hat Certified, from Ansible Automation Hub.
-This requires an offline token. 
-
-If you ran the 
-https://raw.githubusercontent.com/nickhardiman/ansible-playbook-lab/main/machine-hypervisor.sh[machine-hypervisor.sh] 
-script, you already have this. 
-
-* Get a token from https://console.redhat.com/ansible/automation-hub/token#
-* Set an environment variable.
-
-[source,shell]
-....
-export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN=eyJhbGciOi...
-....
-
-* Install collections. 
-
-[source,shell]
-....
-ansible-galaxy collection install -r collections/requirements.yml 
-....
-
-* Install roles. 
-
-[source,shell]
-....
-ansible-galaxy role install -r roles/requirements.yml 
-....
-
-
-=== Add Red Hat Subscription account to the vault
+=== add Red Hat Subscription account to the vault
 
 Each new VM will connect to the RHSM (Red Hat Subscription Management) network,
 register, attach a subscription entitlement, and download from 
@@ -346,3 +218,4 @@ MIT
 == Author Information
 
 Nick.
+
